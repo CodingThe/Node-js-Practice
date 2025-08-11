@@ -1,6 +1,18 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+import cors from 'cors';
+
+// cores
+app.use(cors());
+
+// cors restriction
+const corsOptions={
+    origin:'http//frontend.com',
+    methods:'GET,POST,PUT,DELETE',
+    allowedHeader: 'Content-Type, Authrization'
+}
+app.use(cors(corsOptions));
 
 // global middleware
 app.use((req,res,next)=>{
@@ -22,7 +34,32 @@ app.use(express.json());
 app.use((err,req,res,next)=>{
     console.log("this is error",err.message);
     res.status(500).send("something broke");
-}) 
+})
+
+
+app.use((req, res, next) => {
+    // Custom property on request
+    req.requestTime = new Date();
+
+    // Custom method on response
+    res.success = (data) => {
+        res.status(200).json({
+            status: "success",
+            timestamp: req.requestTime,
+            data
+        });
+    };
+
+    res.error = (message, code = 500) => {
+        res.status(code).json({
+            status: "error",
+            timestamp: req.requestTime,
+            message
+        });
+    };
+
+    next();
+});
 
 const users =[{id:1, Name: "john", greet:"hi"}];
 
@@ -32,7 +69,7 @@ app.get('/',(req,res)=>{
 })
 
 app.get('/getUsers', chechAuth, (req ,res) => {
-    res.send(users);
+    res.success({ name: "John Doe", age: 25 });
 })
 
 
