@@ -1,18 +1,27 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-import cors from 'cors';
+// import cors from 'cors';
+// const morgan = require('morgen');
+const mongoose = require('mongoose')
 
+// mongo conncect
+mongoose.connect('mongodb://127.0.0.1:27017/mydb').then(()=>{
+    console.log("connected to mongodb");
+})
+
+// morgen
+// app.use(morgan('dev'));
 // cores
-app.use(cors());
+// app.use(cors());
 
 // cors restriction
-const corsOptions={
-    origin:'http//frontend.com',
-    methods:'GET,POST,PUT,DELETE',
-    allowedHeader: 'Content-Type, Authrization'
-}
-app.use(cors(corsOptions));
+// const corsOptions={
+//     origin:'http//frontend.com',
+//     methods:'GET,POST,PUT,DELETE',
+//     allowedHeader: 'Content-Type, Authrization'
+// }
+// app.use(cors(corsOptions));
 
 // global middleware
 app.use((req,res,next)=>{
